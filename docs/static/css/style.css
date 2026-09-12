@@ -56,7 +56,8 @@ code{
 .brand-mark{
   font-family:var(--font-display);
   font-weight:700;
-  font-size:1.5rem;
+  font-size:1.05rem;
+  letter-spacing:-0.02em;
   color:var(--maroon);
   border:2px solid var(--maroon);
   width:48px; height:48px;
@@ -117,6 +118,7 @@ code{
 
 /* Panels / grid */
 .grid-two{display:grid; grid-template-columns:1.2fr 1fr; gap:24px;}
+.grid-two.single{grid-template-columns:1fr; max-width:520px;}
 .panel{
   background:var(--paper-raised);
   border:1px solid var(--line);

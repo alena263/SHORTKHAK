@@ -1,4 +1,18 @@
+"""
+build.py — собирает статичный сайт университета.
 
+Что делает:
+1. Читает данные из data/events.json и data/schedule.json.
+2. Рендерит HTML-страницы из шаблонов (папка templates/) через Jinja2.
+3. Копирует static/ и data/ в папку docs/ — именно её GitHub Pages
+   отдаёт посетителям сайта.
+
+Запуск:
+    python build.py
+
+После этого папку docs/ нужно закоммитить и запушить в GitHub
+(или доверить это GitHub Actions — см. .github/workflows/deploy.yml).
+"""
 
 import json
 import shutil
@@ -24,6 +38,7 @@ def build():
 
     env = Environment(loader=FileSystemLoader(str(TEMPLATES_DIR)))
 
+    # Очищаем и пересоздаём папку вывода
     if OUTPUT_DIR.exists():
         shutil.rmtree(OUTPUT_DIR)
     OUTPUT_DIR.mkdir(parents=True)
@@ -44,7 +59,8 @@ def build():
     shutil.copytree(STATIC_DIR, OUTPUT_DIR / "static")
     shutil.copytree(DATA_DIR, OUTPUT_DIR / "data")
 
-
+    # Файл .nojekyll нужен, чтобы GitHub Pages не пытался обработать
+    # сайт через Jekyll (это может сломать папки, начинающиеся с "_")
     (OUTPUT_DIR / ".nojekyll").touch()
 
     print(f"\nГотово. Сайт собран в папке: {OUTPUT_DIR}")
