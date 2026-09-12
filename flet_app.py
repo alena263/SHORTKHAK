@@ -3,10 +3,7 @@ import requests
 import html
 import threading
 
-API_KEY = "AQVNxf2UMDoYYHqOKEcuO3NqAyxM2nkhoXYzU4Hq"
-FOLDER_ID = "b1giauakjkg1cj78j8id"
-API_URL = "https://llm.api.cloud.yandex.net/foundationModels/v1/completion"
-MODEL_URI = f"gpt://{FOLDER_ID}/yandexgpt-lite/latest"
+
 
 
 def format_error(exc):
