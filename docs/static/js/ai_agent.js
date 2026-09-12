@@ -4,7 +4,7 @@
 // бэкенда после деплоя (см. ai-backend/README.md), например:
 // endpoint: 'https://uusb-ai-backend.onrender.com/api/chat'
 const AI_AGENT_CONFIG = {
-  endpoint: '',
+  endpoint: 'https://shortkhak.onrender.com/api/chat',
 };
 
 (function () {
