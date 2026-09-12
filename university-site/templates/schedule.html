@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% block title %}Расписание — Университет успеха, славы и богатства{% endblock %}
+{% block content %}
+
+<section class="page-head">
+  <h1>Расписание занятий</h1>
+  <p class="muted">Данные собираются из <code>data/schedule.json</code> при сборке сайта.</p>
+</section>
+
+<div class="schedule-controls">
+  <label>Группа
+    <select id="group-filter">
+      <option value="all">Все группы</option>
+      {% for g in schedule.groups %}
+      <option value="{{ g }}">{{ g }}</option>
+      {% endfor %}
+    </select>
+  </label>
+</div>
+
+<div class="day-tabs" role="tablist">
+  {% for day in schedule.days.keys() %}
+  <button class="day-tab {% if loop.first %}active{% endif %}" data-day="{{ day }}">{{ day }}</button>
+  {% endfor %}
+</div>
+
+{% for day, lessons in schedule.days.items() %}
+<div class="day-table {% if not loop.first %}hidden{% endif %}" data-day="{{ day }}">
+  <table class="schedule-table">
+    <thead>
+      <tr><th>Время</th><th>Предмет</th><th>Аудитория</th><th>Преподаватель</th><th>Группа</th></tr>
+    </thead>
+    <tbody>
+      {% for lesson in lessons %}
+      <tr data-group="{{ lesson.group }}">
+        <td class="mono">{{ lesson.time }}</td>
+        <td>{{ lesson.subject }}</td>
+        <td>{{ lesson.room }}</td>
+        <td>{{ lesson.teacher }}</td>
+        <td>{{ lesson.group }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endfor %}
+
+{% endblock %}
+{% block scripts %}
+<script src="static/js/schedule.js"></script>
+{% endblock %}

@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Расписание — Университет успеха, славы и богатства</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:wght@500;600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="static/css/style.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="wrap header-row">
+      <a class="brand" href="index.html">
+        <span class="brand-mark">УУСБ</span>
+        <span class="brand-name">Университет успеха,<br>славы и богатства</span>
+      </a>
+      <nav class="site-nav">
+        <a href="index.html" >Главная</a>
+        <a href="calendar.html" >Календарь</a>
+        <a href="schedule.html" class="active">Расписание</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="wrap page">
+    
+
+<section class="page-head">
+  <h1>Расписание занятий</h1>
+  <p class="muted">Данные собираются из <code>data/schedule.json</code> при сборке сайта.</p>
+</section>
+
+<div class="schedule-controls">
+  <label>Группа
+    <select id="group-filter">
+      <option value="all">Все группы</option>
+      
+      <option value="ПИ-21">ПИ-21</option>
+      
+      <option value="ЭК-22">ЭК-22</option>
+      
+      <option value="ЮР-23">ЮР-23</option>
+      
+    </select>
+  </label>
+</div>
+
+<div class="day-tabs" role="tablist">
+  
+  <button class="day-tab active" data-day="Понедельник">Понедельник</button>
+  
+  <button class="day-tab " data-day="Вторник">Вторник</button>
+  
+  <button class="day-tab " data-day="Среда">Среда</button>
+  
+  <button class="day-tab " data-day="Четверг">Четверг</button>
+  
+  <button class="day-tab " data-day="Пятница">Пятница</button>
+  
+</div>
+
+
+<div class="day-table " data-day="Понедельник">
+  <table class="schedule-table">
+    <thead>
+      <tr><th>Время</th><th>Предмет</th><th>Аудитория</th><th>Преподаватель</th><th>Группа</th></tr>
+    </thead>
+    <tbody>
+      
+      <tr data-group="ПИ-21">
+        <td class="mono">09:00–10:30</td>
+        <td>Математический анализ</td>
+        <td>204</td>
+        <td>Иванова А.С.</td>
+        <td>ПИ-21</td>
+      </tr>
+      
+      <tr data-group="ПИ-21">
+        <td class="mono">10:40–12:10</td>
+        <td>Программирование</td>
+        <td>лаб. 3</td>
+        <td>Петров К.В.</td>
+        <td>ПИ-21</td>
+      </tr>
+      
+      <tr data-group="ЭК-22">
+        <td class="mono">09:00–10:30</td>
+        <td>Экономическая теория</td>
+        <td>115</td>
+        <td>Сидорова Н.П.</td>
+        <td>ЭК-22</td>
+      </tr>
+      
+    </tbody>
+  </table>
+</div>
+
+<div class="day-table hidden" data-day="Вторник">
+  <table class="schedule-table">
+    <thead>
+      <tr><th>Время</th><th>Предмет</th><th>Аудитория</th><th>Преподаватель</th><th>Группа</th></tr>
+    </thead>
+    <tbody>
+      
+      <tr data-group="ЮР-23">
+        <td class="mono">09:00–10:30</td>
+        <td>История</td>
+        <td>301</td>
+        <td>Кузнецов И.И.</td>
+        <td>ЮР-23</td>
+      </tr>
+      
+      <tr data-group="ПИ-21">
+        <td class="mono">10:40–12:10</td>
+        <td>Английский язык</td>
+        <td>212</td>
+        <td>Смирнова Е.А.</td>
+        <td>ПИ-21</td>
+      </tr>
+      
+    </tbody>
+  </table>
+</div>
+
+<div class="day-table hidden" data-day="Среда">
+  <table class="schedule-table">
+    <thead>
+      <tr><th>Время</th><th>Предмет</th><th>Аудитория</th><th>Преподаватель</th><th>Группа</th></tr>
+    </thead>
+    <tbody>
+      
+      <tr data-group="ПИ-21">
+        <td class="mono">09:00–10:30</td>
+        <td>Базы данных</td>
+        <td>лаб. 1</td>
+        <td>Петров К.В.</td>
+        <td>ПИ-21</td>
+      </tr>
+      
+      <tr data-group="ЮР-23">
+        <td class="mono">10:40–12:10</td>
+        <td>Гражданское право</td>
+        <td>204</td>
+        <td>Волкова Т.М.</td>
+        <td>ЮР-23</td>
+      </tr>
+      
+    </tbody>
+  </table>
+</div>
+
+<div class="day-table hidden" data-day="Четверг">
+  <table class="schedule-table">
+    <thead>
+      <tr><th>Время</th><th>Предмет</th><th>Аудитория</th><th>Преподаватель</th><th>Группа</th></tr>
+    </thead>
+    <tbody>
+      
+      <tr data-group="ПИ-21">
+        <td class="mono">09:00–10:30</td>
+        <td>Физическая культура</td>
+        <td>спортзал</td>
+        <td>Морозов Д.А.</td>
+        <td>ПИ-21</td>
+      </tr>
+      
+      <tr data-group="ЭК-22">
+        <td class="mono">10:40–12:10</td>
+        <td>Микроэкономика</td>
+        <td>118</td>
+        <td>Сидорова Н.П.</td>
+        <td>ЭК-22</td>
+      </tr>
+      
+    </tbody>
+  </table>
+</div>
+
+<div class="day-table hidden" data-day="Пятница">
+  <table class="schedule-table">
+    <thead>
+      <tr><th>Время</th><th>Предмет</th><th>Аудитория</th><th>Преподаватель</th><th>Группа</th></tr>
+    </thead>
+    <tbody>
+      
+      <tr data-group="ПИ-21">
+        <td class="mono">09:00–10:30</td>
+        <td>Web-разработка</td>
+        <td>лаб. 3</td>
+        <td>Петров К.В.</td>
+        <td>ПИ-21</td>
+      </tr>
+      
+    </tbody>
+  </table>
+</div>
+
+
+
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap">
+      <p>© 2026, Университет успеха, славы и богатства. Сайт собран как учебный проект.</p>
+    </div>
+  </footer>
+
+  <div id="ai-agent-root"></div>
+  <script src="static/js/ai_agent.js"></script>
+  
+<script src="static/js/schedule.js"></script>
+
+</body>
+</html>
