@@ -1,4 +1,6 @@
 import os
+import time
+import datetime
 import flet as ft
 import requests
 import html
@@ -12,6 +14,77 @@ API_KEY = os.getenv("API_KEY")
 FOLDER_ID = os.getenv("FOLDER_ID")
 API_URL = "https://llm.api.cloud.yandex.net/foundationModels/v1/completion"
 MODEL_URI = f"gpt://{FOLDER_ID}/yandexgpt-lite/latest" if FOLDER_ID else None
+
+# Адрес опубликованного сайта — агент подгружает те же JSON-файлы,
+# что использует сам сайт для календаря и расписания. Если адрес сайта
+# изменится, поменяйте его здесь (или через переменную окружения SITE_BASE_URL).
+SITE_BASE_URL = os.environ.get("SITE_BASE_URL", "https://alena263.github.io/SHORTKHAK")
+EVENTS_URL = f"{SITE_BASE_URL}/data/events.json"
+SCHEDULE_URL = f"{SITE_BASE_URL}/data/schedule.json"
+
+_context_cache = {"text": None, "fetched_at": 0}
+CONTEXT_TTL_SECONDS = 300  # обновлять данные сайта не чаще раза в 5 минут
+
+
+def _format_events(events):
+    if not events:
+        return "нет данных о мероприятиях"
+    lines = []
+    for e in events:
+        parts = [e.get("date", ""), e.get("time", "")]
+        header = " ".join(p for p in parts if p)
+        line = f"- {header}: {e.get('title', '')}"
+        if e.get("location"):
+            line += f", место: {e['location']}"
+        if e.get("description"):
+            line += f" — {e['description']}"
+        lines.append(line)
+    return "\n".join(lines)
+
+
+def _format_schedule(schedule):
+    days = (schedule or {}).get("days", {})
+    if not days:
+        return "нет данных о расписании"
+    lines = []
+    for day, lessons in days.items():
+        for lesson in lessons:
+            lines.append(
+                f"- {day}, {lesson.get('time', '')}: {lesson.get('subject', '')} "
+                f"(группа {lesson.get('group', '')}), ауд. {lesson.get('room', '')}, "
+                f"преподаватель {lesson.get('teacher', '')}"
+            )
+    return "\n".join(lines)
+
+
+def get_site_context():
+    now = time.time()
+    if _context_cache["text"] and now - _context_cache["fetched_at"] < CONTEXT_TTL_SECONDS:
+        return _context_cache["text"]
+
+    try:
+        events = requests.get(EVENTS_URL, timeout=10).json()
+    except Exception:
+        events = []
+    try:
+        schedule = requests.get(SCHEDULE_URL, timeout=10).json()
+    except Exception:
+        schedule = {}
+
+    today = datetime.date.today().isoformat()
+    text = (
+        "Ты — помощник сайта университета «Университет успеха, славы и богатства» (УУСБ). "
+        f"Сегодняшняя дата: {today}. "
+        "Отвечай на вопросы студентов и абитуриентов кратко и по делу, опираясь на "
+        "приведённые ниже данные сайта. Если в вопросе спрашивают то, чего нет в "
+        "данных — честно скажи, что не располагаешь такой информацией.\n\n"
+        f"Мероприятия:\n{_format_events(events)}\n\n"
+        f"Расписание занятий:\n{_format_schedule(schedule)}"
+    )
+
+    _context_cache["text"] = text
+    _context_cache["fetched_at"] = now
+    return text
 
 
 def format_error(exc):
@@ -38,7 +111,8 @@ def call_yandex(question, on_success, on_error):
                     "maxTokens": "1000",
                 },
                 "messages": [
-                    {"role": "user", "text": question}
+                    {"role": "system", "text": get_site_context()},
+                    {"role": "user", "text": question},
                 ],
             }
             response = requests.post(API_URL, headers=headers, json=payload, timeout=120)
