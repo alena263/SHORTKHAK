@@ -1,9 +1,17 @@
+import os
 import flet as ft
 import requests
 import html
 import threading
+from dotenv import load_dotenv
+
+load_dotenv()  # Загружает переменные окружения из .env файла (локально)
 
 
+API_KEY = os.getenv("API_KEY")
+FOLDER_ID = os.getenv("FOLDER_ID")
+API_URL = "https://llm.api.cloud.yandex.net/foundationModels/v1/completion"
+MODEL_URI = f"gpt://{FOLDER_ID}/yandexgpt-lite/latest" if FOLDER_ID else None
 
 
 def format_error(exc):
@@ -16,6 +24,8 @@ def format_error(exc):
 def call_yandex(question, on_success, on_error):
     def worker():
         try:
+            if not API_KEY or not FOLDER_ID:
+                raise Exception("Не заданы переменные окружения API_KEY / FOLDER_ID")
             headers = {
                 "Authorization": f"Api-Key {API_KEY}",
                 "Content-Type": "application/json",
@@ -25,7 +35,7 @@ def call_yandex(question, on_success, on_error):
                 "completionOptions": {
                     "stream": False,
                     "temperature": 0.7,
-                    "maxTokens": 1000,
+                    "maxTokens": "1000",
                 },
                 "messages": [
                     {"role": "user", "text": question}
@@ -38,7 +48,12 @@ def call_yandex(question, on_success, on_error):
                 raise Exception("403 Forbidden: folder or API key permission denied")
             if response.status_code == 429:
                 raise Exception("429 RESOURCE_EXHAUSTED: quota exceeded")
-            response.raise_for_status()
+            if response.status_code >= 400:
+                try:
+                    details = response.json()
+                except ValueError:
+                    details = response.text
+                raise Exception(f"{response.status_code} error: {details}")
             data = response.json()
             text = data["result"]["alternatives"][0]["message"]["text"]
             on_success(question, text)
@@ -163,4 +178,5 @@ def main(page: ft.Page):
 
 
 if __name__ == "__main__":
-    ft.run(main, view=ft.AppView.FLET_APP_WEB)
+    port = int(os.environ.get("PORT", 8000))
+    ft.run(main, host="0.0.0.0", port=port)
