@@ -3,9 +3,13 @@ import flet as ft
 import requests
 import html
 import threading
+from dotenv import load_dotenv
 
-API_KEY = os.environ.get("YANDEX_API_KEY")
-FOLDER_ID = os.environ.get("YANDEX_FOLDER_ID")
+load_dotenv()  # Загружает переменные окружения из .env файла (локально)
+
+
+API_KEY = os.getenv("API_KEY")
+FOLDER_ID = os.getenv("FOLDER_ID")
 API_URL = "https://llm.api.cloud.yandex.net/foundationModels/v1/completion"
 MODEL_URI = f"gpt://{FOLDER_ID}/yandexgpt-lite/latest" if FOLDER_ID else None
 
@@ -21,7 +25,7 @@ def call_yandex(question, on_success, on_error):
     def worker():
         try:
             if not API_KEY or not FOLDER_ID:
-                raise Exception("На сервере не заданы YANDEX_API_KEY / YANDEX_FOLDER_ID")
+                raise Exception("Не заданы переменные окружения API_KEY / FOLDER_ID")
             headers = {
                 "Authorization": f"Api-Key {API_KEY}",
                 "Content-Type": "application/json",
@@ -44,7 +48,12 @@ def call_yandex(question, on_success, on_error):
                 raise Exception("403 Forbidden: folder or API key permission denied")
             if response.status_code == 429:
                 raise Exception("429 RESOURCE_EXHAUSTED: quota exceeded")
-            response.raise_for_status()
+            if response.status_code >= 400:
+                try:
+                    details = response.json()
+                except ValueError:
+                    details = response.text
+                raise Exception(f"{response.status_code} error: {details}")
             data = response.json()
             text = data["result"]["alternatives"][0]["message"]["text"]
             on_success(question, text)
