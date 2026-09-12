@@ -3,7 +3,7 @@
 // приложение. Впишите сюда адрес после деплоя (см. ai-backend/README.md),
 // например: endpoint: 'https://uusb-ai-agent.onrender.com'
 const AI_AGENT_CONFIG = {
-  endpoint: 'https://shortkhak-1.onrender.com/',
+  endpoint: 'https://shortkhak-2.onrender.com/',
 };
 
 (function () {
