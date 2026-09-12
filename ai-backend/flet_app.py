@@ -31,7 +31,7 @@ def call_yandex(question, on_success, on_error):
                 "completionOptions": {
                     "stream": False,
                     "temperature": 0.7,
-                    "maxTokens": 1000,
+                    "maxTokens": "1000",
                 },
                 "messages": [
                     {"role": "user", "text": question}
