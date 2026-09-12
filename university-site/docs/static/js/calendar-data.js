@@ -1,4 +1,5 @@
-
+// Загружает список мероприятий: базовые (из data/events.json, собранные Python-скриптом)
+// плюс те, что посетитель добавил локально в своём браузере через форму на странице календаря.
 const LOCAL_EVENTS_KEY = 'university_local_events';
 
 async function loadEvents() {
