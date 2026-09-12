@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% block title %}Главная — Северный политехнический университет{% endblock %}
+{% block content %}
+
+<section class="hero">
+  <p class="hero-kicker">Учебный сайт факультета</p>
+  <h1>Расписание и жизнь университета —<br>в одном месте.</h1>
+  <p class="hero-lede">Здесь студенты и преподаватели находят актуальное расписание занятий
+  и следят за мероприятиями: конференциями, днями открытых дверей, праздниками.</p>
+  <div class="hero-actions">
+    <a class="btn btn-primary" href="calendar.html">Открыть календарь</a>
+    <a class="btn btn-ghost" href="schedule.html">Смотреть расписание</a>
+  </div>
+</section>
+
+<section class="grid-two">
+  <article class="panel">
+    <h2>Ближайшие мероприятия</h2>
+    <ul id="upcoming-events" class="event-list">
+      <li class="muted">Загрузка…</li>
+    </ul>
+    <a class="link-more" href="calendar.html">Все мероприятия →</a>
+  </article>
+
+  <article class="panel">
+    <h2>Как устроен сайт</h2>
+    <ol class="steps">
+      <li>Данные о мероприятиях и расписании хранятся в файлах <code>data/events.json</code> и <code>data/schedule.json</code>.</li>
+      <li>Скрипт <code>build.py</code> на Python собирает из них статичные HTML‑страницы.</li>
+      <li>GitHub Actions автоматически пересобирает и публикует сайт при каждом изменении.</li>
+    </ol>
+  </article>
+</section>
+
+{% endblock %}
+{% block scripts %}
+<script src="static/js/calendar-data.js"></script>
+<script>
+  loadEvents().then(events => {
+    const list = document.getElementById('upcoming-events');
+    const today = new Date().toISOString().slice(0,10);
+    const upcoming = events.filter(e => e.date >= today).sort((a,b)=>a.date.localeCompare(b.date)).slice(0,4);
+    list.innerHTML = '';
+    if (upcoming.length === 0) {
+      list.innerHTML = '<li class="muted">Ближайших мероприятий пока нет.</li>';
+      return;
+    }
+    upcoming.forEach(e => {
+      const li = document.createElement('li');
+      const d = new Date(e.date + 'T00:00:00');
+      const dateStr = d.toLocaleDateString('ru-RU', {day:'numeric', month:'long'});
+      li.innerHTML = `<span class="event-date">${dateStr}</span><span class="event-title">${e.title}</span>`;
+      list.appendChild(li);
+    });
+  });
+</script>
+{% endblock %}
