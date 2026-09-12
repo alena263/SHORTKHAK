@@ -24,7 +24,6 @@ def build():
 
     env = Environment(loader=FileSystemLoader(str(TEMPLATES_DIR)))
 
-    # Очищаем и пересоздаём папку вывода
     if OUTPUT_DIR.exists():
         shutil.rmtree(OUTPUT_DIR)
     OUTPUT_DIR.mkdir(parents=True)
@@ -41,12 +40,10 @@ def build():
         (OUTPUT_DIR / filename).write_text(html, encoding="utf-8")
         print(f"  собрано: {filename}")
 
-    # Копируем статические файлы и данные, чтобы JS мог их подгружать
+
     shutil.copytree(STATIC_DIR, OUTPUT_DIR / "static")
     shutil.copytree(DATA_DIR, OUTPUT_DIR / "data")
 
-    # Файл .nojekyll нужен, чтобы GitHub Pages не пытался обработать
-    # сайт через Jekyll (это может сломать папки, начинающиеся с "_")
     (OUTPUT_DIR / ".nojekyll").touch()
 
     print(f"\nГотово. Сайт собран в папке: {OUTPUT_DIR}")
