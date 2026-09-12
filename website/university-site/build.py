@@ -1,18 +1,4 @@
-"""
-build.py — собирает статичный сайт университета.
 
-Что делает:
-1. Читает данные из data/events.json и data/schedule.json.
-2. Рендерит HTML-страницы из шаблонов (папка templates/) через Jinja2.
-3. Копирует static/ и data/ в папку docs/ — именно её GitHub Pages
-   отдаёт посетителям сайта.
-
-Запуск:
-    python build.py
-
-После этого папку docs/ нужно закоммитить и запушить в GitHub
-(или доверить это GitHub Actions — см. .github/workflows/deploy.yml).
-"""
 
 import json
 import shutil
